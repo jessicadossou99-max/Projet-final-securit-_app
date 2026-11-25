@@ -37,11 +37,14 @@ python manage.py check --deploy
 python manage.py migrate --plan
 python manage.py migrate --noinput
 python manage.py createsuperuser
+python manage.py setup_roles
 ```
 
 Review the database target before applying migrations. Never run the test suite or demo seeder against it. No default production administrator exists. Django's production security checks may warn about HSTS includeSubDomains and preload: both are deliberately disabled for a cautious initial rollout. Do not silence warnings without understanding them or enable preload casually. Begin with the short 300-second HSTS policy and choose a production policy after testing.
 
 The starter does **not** migrate during the build: preview builds must not race to change production schemas. In later milestones put migrations into a controlled release procedure, considering compatibility with old/new code and backups. Rollback of application code does not automatically reverse schema/data changes.
+
+After `setup_roles`, manage the `Incident analysts` and `Incident administrators` groups in Django admin. See [ROLE_POLICY.md](ROLE_POLICY.md) for the server-enforced access matrix.
 
 ## 3. Deploy and smoke-test
 

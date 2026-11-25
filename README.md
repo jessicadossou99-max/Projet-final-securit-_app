@@ -97,13 +97,29 @@ python manage.py test --settings=config.settings.ci
 
 PostgreSQL test credentials need permission to create/drop a disposable test database; the local course DB user has this. Never run tests against production. `test` and `ci` settings intentionally use fast MD5 hashes only to speed isolated tests; they must never be selected for a deployment. Local/production use Django's normal password hashers.
 
-`.github/workflows/tests.yml` runs both test variants on pushes and pull requests. SAST, dependency/secret scanning and DAST are deliberately left as milestones in [docs/MILESTONES.md](docs/MILESTONES.md).
+The isolated SQL-injection hardening exercise has its own explicit gate:
 
-## 5. Publish your code to GitHub
+```bash
+python manage.py test training.tests.test_hardening --settings=config.settings.security_lab
+```
+
+The repaired exercise uses an owner-scoped Django ORM query. It remains local-only and is not included in the normal or deployed URL configuration. The GitHub Actions pipeline now runs behavioral tests, PostgreSQL integration tests, SAST, dependency and secret scans, the isolated dynamic hardening gate, and a scoped local ZAP baseline; see [docs/SECURITY_TESTING.md](docs/SECURITY_TESTING.md).
+
+## 5. Roles and course extensions
+
+The public home page is Jessica Dossou's interactive CV. Incident Desk has three server-enforced roles: reporter, assigned analyst, and administrator. Only administrators can delete an incident. Create the two role groups after each new database migration:
+
+```bash
+python manage.py setup_roles
+```
+
+Use Django admin to assign staff members to `Incident analysts` or `Incident administrators`. See [docs/ROLE_POLICY.md](docs/ROLE_POLICY.md).
+
+## 6. Publish your code to GitHub
 
 Use the instructor's GitHub template when available, or create an empty **personal** repository and follow [docs/GITHUB.md](docs/GITHUB.md). Review `git status` before the first commit. `.venv`, `.env`, database files and generated staticfiles must not be uploaded.
 
-## 6. Deploy
+## 7. Deploy
 
 Follow [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). The app is configured for Vercel's native Django detection, not a Docker deployment. Use hosted PostgreSQL; a local SQLite file cannot persist application writes on Vercel. Migrations and initial administrator creation are explicit operations; they never run on HTTP requests or automatically in the build.
 
