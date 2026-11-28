@@ -1,0 +1,5 @@
+/* Ajustements de lisibilité du bandeau CV */
+.signature-reprise h1{font-size:clamp(56px,8vw,112px);letter-spacing:-6px}
+.signature-reprise .cv-contact-button.project-cta{width:auto!important;display:inline-flex!important;align-items:center!important;justify-content:space-between!important;gap:28px!important;background:#193e38!important;color:#fff!important;border:1px solid #193e38!important;border-radius:10px!important;padding:16px 19px!important;font-weight:800!important;text-decoration:none!important}
+.signature-reprise .cv-contact-button.project-cta:hover{background:#28574e!important;color:#fff!important}
+@media(max-width:900px){.signature-reprise.cv-hero{grid-template-columns:1fr}.signature-reprise .signature-orbit{display:none}.signature-reprise h1{font-size:clamp(52px,10vw,76px);letter-spacing:-4px}}
